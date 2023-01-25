@@ -107,14 +107,15 @@ createUsername(accounts);
 
 // DisplayBalance
 
-const CalcDisplayBalance = function (account) {
-  account.balance = account.movement.reduce(function (acc, mov) {
+const CalcDisplayBalance = function (currentAccount) {
+  currentAccount.balance = currentAccount.movements.reduce(function (acc, mov) {
     return acc + mov;
   }, 0);
-  if (balance < 0) {
+  console.log('Whats up G')
+  if (currentAccount.balance < 0) {
     labelBalance.textContent = `0000€`;
   } else {
-    labelBalance.textContent = `${balance}€`;
+    labelBalance.textContent = `${currentAccount.balance}€`;
   }
 };
 
@@ -146,14 +147,7 @@ const calcDisplaysummary = function (acc) {
   labelSumInterest.textContent = `${interest}€`;
 };
 
-//UPDATE UI
-const updateUI = function(acc){
-  DisplayMovements(acc.movements);
-    //Display Balance
-    CalcDisplayBalance(acc);
-    //Display summary
-    calcDisplaysummary(acc);
-}
+
 // IMPLEMENTING LOGIN FEATURE
 let currentAccount;
 btnLogin.addEventListener('click', function (e) {
@@ -171,7 +165,11 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     // inputLoginPin.blur()
     //Display movements
-    updateUI(currentAccount)
+    DisplayMovements(currentAccount.movements);
+    //Display Balance
+    CalcDisplayBalance(currentAccount);
+    //Display summary
+    calcDisplaysummary(currentAccount);
   }
   //  console.log(currentAccount)
 });
@@ -188,6 +186,10 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc.push(amount);
 
     //update ui
-    updateUI(currentAccount)
+    DisplayMovements(currentAccount.movements);
+    //Display Balance
+    CalcDisplayBalance(currentAccount);
+    //Display summary
+    calcDisplaysummary(currentAccount);
   }
 });
