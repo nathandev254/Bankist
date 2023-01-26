@@ -200,8 +200,8 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   const loanAmount = Number(inputLoanAmount.value);
-  if (loanAmount > 0 && currentAccount.movement.some(function (mov){
-    return mov >= amount / 10
+  if (loanAmount > 0 && currentAccount.movements.some(function (mov){
+    return mov >= loanAmount / 10
   })) {
     currentAccount.movements.push(loanAmount)
     DisplayMovements(currentAccount.movements);
