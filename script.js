@@ -163,7 +163,7 @@ btnLogin.addEventListener('click', function (e) {
     } `;
     containerApp.style.opacity = 1;
     inputLoginUsername.value = inputLoginPin.value = '';
-    // inputLoginPin.blur()
+    inputLoginPin.blur()
     //Display movements
     DisplayMovements(currentAccount.movements);
     //Display Balance
@@ -181,7 +181,7 @@ btnTransfer.addEventListener('click', function (e) {
     return acc.username === inputTransferTo.value
   })
   inputTransferAmount.value = inputTransferTo.value = ''
-  if(amount > 0 && receiverAcc &&currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username ){
+  if(amount > 0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username ){
     currentAccount.push(-amount);
     receiverAcc.push(amount);
 
@@ -193,3 +193,16 @@ btnTransfer.addEventListener('click', function (e) {
     calcDisplaysummary(currentAccount);
   }
 });
+btnClose.addEventListener('click', function(e){
+  e.preventDefault();
+  if(inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin){
+  // console.log(`We want to close this account`)
+  const index = accounts.findIndex(function(acc){
+    return acc.username === inputCloseUsername.value
+  })
+  accounts.splice(index, 1)
+  containerApp.style.opacity = 0
+  }
+  inputCloseUsername.value = inputClosePin.value = ''
+})
+ 
