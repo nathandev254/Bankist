@@ -109,7 +109,7 @@ const CalcDisplayBalance = function (currentAccount) {
   currentAccount.balance = currentAccount.movements.reduce(function (acc, mov) {
     return acc + mov;
   }, 0);
-  console.log('Whats up G');
+  // console.log('Whats up G');
   if (currentAccount.balance < 0) {
     labelBalance.textContent = `0000€`;
   } else {
