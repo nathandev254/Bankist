@@ -232,10 +232,10 @@ btnClose.addEventListener('click', function (e) {
 });
 
 
-let sort = false
+let sorted = false
 btnSort.addEventListener('click', function(e){
   e.preventDefault()
-  DisplayMovements(currentAccount.movements,!sort)
-  sort = !sort
+  DisplayMovements(currentAccount.movements,!sorted)
+  sorted = !sorted
 })
 
