@@ -77,7 +77,7 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 const DisplayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  const mov = sort ? movements.slice().sort((a,b) => a-b) : movements; 
+  const mov = sort ? movements.slice().sort((a, b) => a - b) : movements;
   mov.forEach(function (movement, index) {
     const type = movement > 0 ? 'deposit' : 'withdrawal';
     const html = `
@@ -197,23 +197,24 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
-
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   const loanAmount = Number(inputLoanAmount.value);
-  if (loanAmount > 0 && currentAccount.movements.some(function (mov){
-    return mov >= loanAmount / 10
-  })) {
-    currentAccount.movements.push(loanAmount)
+  if (
+    loanAmount > 0 &&
+    currentAccount.movements.some(function (mov) {
+      return mov >= loanAmount / 10;
+    })
+  ) {
+    currentAccount.movements.push(loanAmount);
     DisplayMovements(currentAccount.movements);
     //Display Balance
     CalcDisplayBalance(currentAccount);
     //Display summary
     calcDisplaysummary(currentAccount);
-    inputLoanAmount.value = '' 
+    inputLoanAmount.value = '';
   }
 });
-
 
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
@@ -231,10 +232,10 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  sorted = !sorted;
+  DisplayMovements(currentAccount.movements, sorted);
+});
 
-let sorted = false
-btnSort.addEventListener('click', function(e){
-  e.preventDefault()
-  sorted = !sorted
-  DisplayMovements(currentAccount.movements,sorted)
-})
