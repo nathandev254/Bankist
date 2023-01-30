@@ -235,7 +235,8 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false
 btnSort.addEventListener('click', function(e){
   e.preventDefault()
-  DisplayMovements(currentAccount.movements,!sorted)
   sorted = !sorted
+  DisplayMovements(currentAccount.movements,sorted)
+  
 })
 
