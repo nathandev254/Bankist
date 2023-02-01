@@ -252,3 +252,6 @@ btnSort.addEventListener('click', function (e) {
   DisplayMovements(currentAccount.movements, sorted);
 });
 
+const now = new Date
+console.log(now)
+
