@@ -47,7 +47,6 @@ const account2 = {
 
 const accounts = [account1, account2];
 
-
 // Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
@@ -167,7 +166,7 @@ btnLogin.addEventListener('click', function (e) {
     const inputLoginuser = inputLoginUsername.value.toLowerCase();
     return acc.username === inputLoginuser;
   });
-  if (currentAccount.pin === Number(inputLoginPin.value)) {
+  if (currentAccount.pin === +inputLoginPin.value) {
     //Display UI and welcome message
     labelWelcome.textContent = `Welcome Back ${
       currentAccount.owner.split(' ')[0]
@@ -175,7 +174,6 @@ btnLogin.addEventListener('click', function (e) {
     containerApp.style.opacity = 1;
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    //Display movements
     DisplayMovements(currentAccount.movements);
     //Display Balance
     CalcDisplayBalance(currentAccount);
@@ -187,7 +185,7 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(function (acc) {
     return acc.username === inputTransferTo.value;
   });
@@ -212,7 +210,7 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  const loanAmount = Number(inputLoanAmount.value);
+  const loanAmount = +inputLoanAmount.value;
   if (
     loanAmount > 0 &&
     currentAccount.movements.some(function (mov) {
@@ -233,7 +231,7 @@ btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     // console.log(`We want to close this account`)
     const index = accounts.findIndex(function (acc) {
@@ -251,7 +249,3 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
   DisplayMovements(currentAccount.movements, sorted);
 });
-
-const now = new Date
-console.log(now)
-
