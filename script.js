@@ -97,7 +97,7 @@ const DisplayMovements = function (movements, sort = false) {
     <div class="movements__type movements__type--${type}">${
       index + 1
     }${type}</div>
-      <div class="movements__value">${movement}€</div>
+      <div class="movements__value">${movement.toFixed(2)}€</div>
   </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
@@ -126,7 +126,7 @@ const CalcDisplayBalance = function (currentAccount) {
   if (currentAccount.balance < 0) {
     labelBalance.textContent = `0000€`;
   } else {
-    labelBalance.textContent = `${currentAccount.balance}€`;
+    labelBalance.textContent = `${currentAccount.balance.toFixed(2)}€`;
   }
 };
 
@@ -137,13 +137,13 @@ const calcDisplaysummary = function (acc) {
     .reduce(function (acc, movement) {
       return acc + movement;
     });
-  labelSumIn.textContent = `${deposits}€`;
+  labelSumIn.textContent = `${deposits.toFixed(2)}€`;
   const withdrawal = acc.movements
     .filter(mov => mov < 0)
     .reduce(function (acc, mov) {
       return acc + mov;
     });
-  labelSumOut.textContent = `${Math.abs(withdrawal)}€`;
+  labelSumOut.textContent = `${Math.abs(withdrawal).toFixed(2)}€`;
   const interest = acc.movements
     .filter(mov => mov > 0)
     .map(function (deposit) {
@@ -155,7 +155,7 @@ const calcDisplaysummary = function (acc) {
     .reduce(function (acc, deposit) {
       return acc + deposit;
     });
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 // IMPLEMENTING LOGIN FEATURE
@@ -210,7 +210,7 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  const loanAmount = +inputLoanAmount.value;
+  const loanAmount = Math.floor(inputLoanAmount.value);
   if (
     loanAmount > 0 &&
     currentAccount.movements.some(function (mov) {
@@ -249,3 +249,4 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
   DisplayMovements(currentAccount.movements, sorted);
 });
+
