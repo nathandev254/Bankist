@@ -186,8 +186,6 @@ currentAccount = account1;
 updateUI(currentAccount);
 containerApp.style.opacity = 1;
 
-const now = new Date();
-
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
   currentAccount = accounts.find(function (acc) {
@@ -196,10 +194,22 @@ btnLogin.addEventListener('click', function (e) {
   });
   if (currentAccount.pin === +inputLoginPin.value) {
     //Display UI and welcome message
+
     labelWelcome.textContent = `Welcome Back ${
       currentAccount.owner.split(' ')[0]
     } `;
     containerApp.style.opacity = 1;
+
+    //Create current Date and time
+    const now = new Date();
+    const day = `${now.getDate()}`.padStart(2, 0);
+    const month = `${now.getMonth()}`.padStart(2, 0);
+    const year = now.getFullYear();
+    const hour = now.getHours();
+    const min = now.getMinutes();
+    labelDate.textContent = `${day}/${month}/${year}, 
+     ${hour}:${min}`;
+
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
@@ -221,8 +231,12 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.balance >= amount &&
     receiverAcc?.username !== currentAccount.username
   ) {
-    currentAccount.push(-amount);
-    receiverAcc.push(amount);
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+
+    currentAccount.movementsDates.push(new Date())
+    receiverAcc.movementsDates.push(new Date())
+
 
     //update ui
     updateUI(currentAccount);
@@ -240,6 +254,7 @@ btnLoan.addEventListener('click', function (e) {
     })
   ) {
     currentAccount.movements.push(loanAmount);
+    currentAccount.movementsDates.push(new Date())
 
     updateUI(currentAccount);
 
