@@ -87,16 +87,27 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
-const DisplayMovements = function (movements, sort = false) {
+const DisplayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
-  const mov = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const mov = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
   mov.forEach(function (movement, index) {
     const type = movement > 0 ? 'deposit' : 'withdrawal';
+
+    const date = new Date(acc.movementsDates[index]);
+
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    const DisplayDate = `${day}/${month}/${year}`;
+
     const html = `
   <div class="movements__row">
     <div class="movements__type movements__type--${type}">${
       index + 1
     }${type}</div>
+      <div class="movements__date">${DisplayDate}</div>
       <div class="movements__value">${movement.toFixed(2)}€</div>
   </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -158,8 +169,25 @@ const calcDisplaysummary = function (acc) {
   labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
+// Update UI
+const updateUI = function (acc) {
+  DisplayMovements(acc);
+  //Display Balance
+  CalcDisplayBalance(acc);
+  //Display summary
+  calcDisplaysummary(acc);
+};
+
 // IMPLEMENTING LOGIN FEATURE
 let currentAccount;
+
+//  FAKE ALREADY LOGGED IN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 1;
+
+const now = new Date();
+
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
   currentAccount = accounts.find(function (acc) {
@@ -174,11 +202,8 @@ btnLogin.addEventListener('click', function (e) {
     containerApp.style.opacity = 1;
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    DisplayMovements(currentAccount.movements);
-    //Display Balance
-    CalcDisplayBalance(currentAccount);
-    //Display summary
-    calcDisplaysummary(currentAccount);
+
+    updateUI(currentAccount);
   }
   //  console.log(currentAccount)
 });
@@ -200,14 +225,11 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc.push(amount);
 
     //update ui
-    DisplayMovements(currentAccount.movements);
-    //Display Balance
-    CalcDisplayBalance(currentAccount);
-    //Display summary
-    calcDisplaysummary(currentAccount);
+    updateUI(currentAccount);
   }
 });
 
+// LOAN APPLICATION
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   const loanAmount = Math.floor(inputLoanAmount.value);
@@ -218,15 +240,14 @@ btnLoan.addEventListener('click', function (e) {
     })
   ) {
     currentAccount.movements.push(loanAmount);
-    DisplayMovements(currentAccount.movements);
-    //Display Balance
-    CalcDisplayBalance(currentAccount);
-    //Display summary
-    calcDisplaysummary(currentAccount);
+
+    updateUI(currentAccount);
+
     inputLoanAmount.value = '';
   }
 });
 
+// CLOSE ACCOUNT
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   if (
@@ -250,3 +271,4 @@ btnSort.addEventListener('click', function (e) {
   DisplayMovements(currentAccount.movements, sorted);
 });
 
+// Create a date
