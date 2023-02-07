@@ -18,8 +18,8 @@ const account1 = {
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2023-02-07T23:36:17.929Z',
+    '2023-02-06T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -86,6 +86,21 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+const formatMovementDate = function (date) {
+  const calcDaypassed = (date1, date2) => Math.round(Math.abs(date2 - date1) / (1000*60*60*24))
+
+  const Dayspassed = calcDaypassed(new Date(), date);
+  console.log(Dayspassed)
+  if (Dayspassed === 0) return `Today`;
+  if (Dayspassed === 1) return `Yesterday`;
+  if (Dayspassed <= 1) return `${Dayspassed} days ago`;
+  else {
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+};
 
 const DisplayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -96,11 +111,7 @@ const DisplayMovements = function (acc, sort = false) {
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(acc.movementsDates[index]);
-
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-    const DisplayDate = `${day}/${month}/${year}`;
+    const DisplayDate = formatMovementDate(date);
 
     const html = `
   <div class="movements__row">
@@ -181,11 +192,6 @@ const updateUI = function (acc) {
 // IMPLEMENTING LOGIN FEATURE
 let currentAccount;
 
-//  FAKE ALREADY LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 1;
-
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
   currentAccount = accounts.find(function (acc) {
@@ -205,8 +211,8 @@ btnLogin.addEventListener('click', function (e) {
     const day = `${now.getDate()}`.padStart(2, 0);
     const month = `${now.getMonth()}`.padStart(2, 0);
     const year = now.getFullYear();
-    const hour = now.getHours();
-    const min = now.getMinutes();
+    const hour = `${now.getHours()}`;
+    const min = `${now.getMinutes()}`;
     labelDate.textContent = `${day}/${month}/${year}, 
      ${hour}:${min}`;
 
@@ -234,9 +240,8 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
-    currentAccount.movementsDates.push(new Date())
-    receiverAcc.movementsDates.push(new Date())
-
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
 
     //update ui
     updateUI(currentAccount);
@@ -254,7 +259,7 @@ btnLoan.addEventListener('click', function (e) {
     })
   ) {
     currentAccount.movements.push(loanAmount);
-    currentAccount.movementsDates.push(new Date())
+    currentAccount.movementsDates.push(new Date().toISOString());
 
     updateUI(currentAccount);
 
@@ -286,4 +291,4 @@ btnSort.addEventListener('click', function (e) {
   DisplayMovements(currentAccount.movements, sorted);
 });
 
-// Create a date
+// Create a date 
