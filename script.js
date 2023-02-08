@@ -86,19 +86,17 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-const formatMovementDate = function (date) {
-  const calcDaypassed = (date1, date2) => Math.round(Math.abs(date2 - date1) / (1000*60*60*24))
+const formatMovementDate = function (date, locale) {
+  const calcDaypassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
   const Dayspassed = calcDaypassed(new Date(), date);
-  console.log(Dayspassed)
+  console.log(Dayspassed);
   if (Dayspassed === 0) return `Today`;
   if (Dayspassed === 1) return `Yesterday`;
   if (Dayspassed <= 1) return `${Dayspassed} days ago`;
   else {
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return new Intl.DateTimeFormat(currentAccount.locale).format(date);
   }
 };
 
@@ -111,7 +109,7 @@ const DisplayMovements = function (acc, sort = false) {
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(acc.movementsDates[index]);
-    const DisplayDate = formatMovementDate(date);
+    const DisplayDate = formatMovementDate(date, currentAccount.locale);
 
     const html = `
   <div class="movements__row">
@@ -192,6 +190,11 @@ const updateUI = function (acc) {
 // IMPLEMENTING LOGIN FEATURE
 let currentAccount;
 
+//FAKE LOGIN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 1;
+
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
   currentAccount = accounts.find(function (acc) {
@@ -208,13 +211,17 @@ btnLogin.addEventListener('click', function (e) {
 
     //Create current Date and time
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth()}`.padStart(2, 0);
-    const year = now.getFullYear();
-    const hour = `${now.getHours()}`;
-    const min = `${now.getMinutes()}`;
-    labelDate.textContent = `${day}/${month}/${year}, 
-     ${hour}:${min}`;
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    };
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
 
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
@@ -291,4 +298,4 @@ btnSort.addEventListener('click', function (e) {
   DisplayMovements(currentAccount.movements, sorted);
 });
 
-// Create a date 
+// Create a date
