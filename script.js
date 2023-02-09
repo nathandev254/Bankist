@@ -245,7 +245,6 @@ btnLogin.addEventListener('click', function (e) {
 
     updateUI(currentAccount);
   }
-  //  console.log(currentAccount)
 });
 
 btnTransfer.addEventListener('click', function (e) {
@@ -313,3 +312,5 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
   DisplayMovements(currentAccount.movements, sorted);
 });
+
+setTimeout(() => console.log('Here is your pizza'))
