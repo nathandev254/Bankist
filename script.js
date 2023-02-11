@@ -204,13 +204,36 @@ const updateUI = function (acc) {
   calcDisplaysummary(acc);
 };
 
+const StartLogoutTimer = function () {
+  let time = 300;
+
+  const Tick = function () {
+    const Minutes = `${Math.trunc(time / 60)}`.padStart(2, 0);
+    const seconds = time % 60;
+    labelTimer.textContent = `${Minutes}:${seconds}`;
+
+    //Stop timer
+    if (time === 0) {
+      clearInterval(Timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+
+    time--;
+  };
+  Tick();
+  const Timer = setInterval(Tick, 1000);
+  // console.log(Timer)
+  return Timer;
+};
+
 // IMPLEMENTING LOGIN FEATURE
-let currentAccount;
+let currentAccount, Timer;
 
 //FAKE LOGIN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 1;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 1;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
@@ -243,6 +266,9 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
+    if (Timer) clearInterval(Timer);
+    Timer = StartLogoutTimer();
+
     updateUI(currentAccount);
   }
 });
@@ -268,6 +294,9 @@ btnTransfer.addEventListener('click', function (e) {
 
     //update ui
     updateUI(currentAccount);
+
+    clearInterval(Timer);
+    Timer = StartLogoutTimer();
   }
 });
 
@@ -281,13 +310,17 @@ btnLoan.addEventListener('click', function (e) {
       return mov >= loanAmount / 10;
     })
   ) {
-    currentAccount.movements.push(loanAmount);
-    currentAccount.movementsDates.push(new Date().toISOString());
+    setTimeout(function () {
+      currentAccount.movements.push(loanAmount);
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    updateUI(currentAccount);
+      updateUI(currentAccount);
+    }, 2500);
 
     inputLoanAmount.value = '';
   }
+  clearInterval(Timer);
+  Timer = StartLogoutTimer();
 });
 
 // CLOSE ACCOUNT
@@ -313,4 +346,4 @@ btnSort.addEventListener('click', function (e) {
   DisplayMovements(currentAccount.movements, sorted);
 });
 
-setTimeout(() => console.log('Here is your pizza'))
+
